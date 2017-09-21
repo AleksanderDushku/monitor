@@ -7,7 +7,7 @@ A monitoring solution for Docker hosts and containers with [Prometheus](https://
 
 Clone this repository on your Docker host, cd into directory and run compose up:
 
-* `$ git clone ssh://git@gitlab.lc:23/e.lebed/monitor.git` 
+* `$ git clone ssh://git@github.com/e.lebed/monitor.git` 
 * `$ cd monitor`
 * `$ docker-compose up -d`
 
