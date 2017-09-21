@@ -1,0 +1,104 @@
+global:
+  scrape_interval:     15s
+  evaluation_interval: 15s
+
+  # Attach these labels to any time series or alerts when communicating with
+  # external systems (federation, remote storage, Alertmanager).
+  external_labels:
+      monitor: 'docker-host-alpha'
+
+# Load and evaluate rules in this file every 'evaluation_interval' seconds.
+rule_files:
+  - "targets.rules"
+  - "host.rules"
+  - "containers.rules"
+
+# A scrape configuration containing exactly one endpoint to scrape.
+scrape_configs:
+  - job_name: 'release_node_exporter'
+    scrape_interval: 5s
+    static_configs:
+      - targets: ['nodeexporter:9100']
+        labels:
+          alias: "release.englishdom.com"
+
+  - job_name: 'prod_node_exporter'
+    scrape_interval: 5s
+    static_configs:
+      - targets: ['englishdom.com:9100']
+        labels:
+          alias: "www.englishdom.com"
+
+  - job_name: 'staging_node_exporter'
+    scrape_interval: 5s
+    static_configs:
+      - targets: ['staging.lc:9100']
+        labels:
+          alias: "staging.lc"
+
+#  - job_name: 'release_mysql_exporter'
+#    scrape_interval: 5s
+#    static_configs:
+#      - targets: ['englishdom.com:9104']
+#        labels:
+#          alias: "release.englishdom.com"
+
+  - job_name: 'prod_mysql_exporter'
+    static_configs:
+      - targets: ['englishdom.com:9104']
+        labels:
+          alias: "db.englishdom.com"
+
+  - job_name: 'staging_mysql_exporter'
+    scrape_interval: 5s
+    static_configs:
+      - targets: ['staging.lc:9104']
+        labels:
+          alias: "db1.lc"
+
+  - job_name: 'release_cadvisor'
+    scrape_interval: 5s
+    static_configs:
+      - targets: ['mobile.lc:9200']
+        labels:
+          alias: "release.englishdom.com"
+
+  - job_name: 'prod_cadvisor'
+    scrape_interval: 5s
+    static_configs:
+      - targets: ['englishdom.com:9200']
+        labels:
+          alias: "www.englishdom.com"
+
+  - job_name: 'staging_cadvisor'
+    scrape_interval: 5s
+    static_configs:
+      - targets: ['staging.lc:9200']
+        labels:
+          alias: "staging.lc"
+
+  - job_name: 'prod_nginx_exporter'
+    static_configs:
+      - targets: ['prodnginxexporter:9113']
+        labels:
+          alias: "www.englishdom.com"
+
+  - job_name: 'prod_redis_exporter'
+    static_configs:
+      - targets: ['englishdom.com:9121']
+        labels:
+          alias: "www.englishdom.com"
+
+  - job_name: 'prod_phpfpm_exporter'
+    static_configs:
+      - targets: ['englishdom.com:9099']
+        labels:
+          alias: "www.englishdom.com"
+
+  - job_name: 'prometheus'
+    scrape_interval: 10s
+    static_configs:
+      - targets: ['localhost:9090']
+        labels:
+          alias: "release.englishdom.com"
+

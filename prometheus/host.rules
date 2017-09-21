@@ -1,0 +1,54 @@
+ALERT high_cpu_usage
+  IF (100 - (avg by (instance) (irate(node_cpu{mode="idle"}[5m])) * 100)) > 75
+  FOR 2m
+  LABELS { severity="critical" }
+  ANNOTATIONS {
+    summary = "{{$labels.instance}}: High CPU usage detected",
+    description = "{{$labels.instance}}: CPU usage is above 75% (current value is: {{ $value }})"
+  }
+
+ALERT high_LA
+  IF node_load5 > 4.0
+  FOR 2m
+  LABELS { severity = "warning" }
+  ANNOTATIONS {
+      summary = "{{$labels.instance}}: High LA detected",
+      description = "Host {{ $labels.instance }} is under high load, the avg load 5m is at {{ $value}}",
+  }
+
+ALERT high_memory_load
+  IF (sum(node_memory_MemTotal) - sum(node_memory_MemFree + node_memory_Buffers + node_memory_Cached) ) / sum(node_memory_MemTotal) * 100 > 75
+  FOR 2m
+  LABELS { severity = "warning" }
+  ANNOTATIONS {
+      summary = "{{ $labels.instance }} memory is almost full",
+      description = "Host {{ $labels.instance }} memory usage is {{ humanize $value}}%",
+  }
+
+ALERT high_swap_usage
+  IF (((node_memory_SwapTotal - node_memory_SwapFree) / node_memory_SwapTotal) * 100) > 75
+  FOR 2m
+  LABELS { severity="warning" }
+  ANNOTATIONS {
+    summary = "{{$labels.instance}}: High swap usage detected",
+    description = "{{$labels.instance}}: Swap usage is above 75% (current value is: {{ $value }})"
+  }
+
+ALERT high_root_disk_load
+  IF ((node_filesystem_size{fstype="ext4",mountpoint=~"/|/rootfs"} - node_filesystem_free{fstype="ext4",mountpoint=~"/|/rootfs"} ) / node_filesystem_size{fstype="ext4",mountpoint=~"/|/rootfs"} * 100) > 75
+  FOR 2m
+  LABELS { severity = "warning" }
+  ANNOTATIONS {
+      summary = "{{ $labels.instance }} root disk is almost full",
+      description = "Host {{ $labels.instance }} root disk usage is {{ humanize $value}}%",
+  }
+
+ALERT high_hetzner_storage_load
+  IF ((node_filesystem_size{fstype="cifs",mountpoint=~"/mnt/.+"} - node_filesystem_free{fstype="cifs",mountpoint=~"/mnt/.+"} ) / node_filesystem_size{fstype="cifs",mountpoint=~"/mnt/.+"} * 100) > 75
+  FOR 2m
+  LABELS { severity = "warning" }
+  ANNOTATIONS {
+    summary = "{{$labels.instance}}: mounted storage is almost full",
+    description = "Host {{$labels.instance}} mounted storage usage is {{ humanize $value}}%"
+  }
+

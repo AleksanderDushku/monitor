@@ -1,0 +1,56 @@
+# don't work for many containers, TODO: describe every?
+ALERT satis
+  IF absent(container_memory_usage_bytes{name="satis"})
+  FOR 2m
+  LABELS { severity = "critical" }
+  ANNOTATIONS {
+      summary= "CONTAINER '{{ $labels.name }}' down",
+      description= "CONTAINER '{{ $labels.name }}' on '{{ $labels.host }}' is down for more than 30 seconds."
+  }
+
+ALERT high_cpu_usage_on_container
+  IF sum(rate(container_cpu_usage_seconds_total{name=~".+"}[1m])) by (name,host) * 100 > 10
+  FOR 2m
+  LABELS { severity = "warning" }
+  ANNOTATIONS {
+      summary = "High CPU usage: CONTAINER '{{ $labels.name }}' on '{{ $labels.host }}'",
+      description = "{{ $labels.name }} is using a LOT of CPU. CPU usage is {{ humanize $value}}%.",
+  }
+
+ALERT graylog_eating_memory
+  IF sum(container_memory_rss{name=~"graylog"}) by (name) > 1200000000
+  FOR 5m
+  LABELS { severity = "warning" }
+  ANNOTATIONS {
+      summary = "High memory usage: CONTAINER '{{ $labels.name }}' on '{{ $labels.instance }}'",
+      description = "{{ $labels.name }} is eating up a LOT of memory. Memory consumption of {{ $labels.name }} is at {{ humanize $value}}.",
+  }
+
+ALERT elasticsearch_eating_memory
+  IF sum(container_memory_rss{name=~"elasticsearch"}) by (name) > 1200000000
+  FOR 5m
+  LABELS { severity = "warning" }
+  ANNOTATIONS {
+      summary = "High memory usage: CONTAINER '{{ $labels.name }}' on '{{ $labels.instance }}'",
+      description = "{{ $labels.name }} is eating up a LOT of memory. Memory consumption of {{ $labels.name }} is at {{ humanize $value}}.",
+  }
+
+ALERT prometheus_eating_memory
+  IF sum(container_memory_rss{name=~"prometheus"}) by (name) > 1200000000
+  FOR 5m
+  LABELS { severity = "warning" }
+  ANNOTATIONS {
+      summary = "High memory usage: CONTAINER '{{ $labels.name }}' on '{{ $labels.instance }}'",
+      description = "{{ $labels.name }} is eating up a LOT of memory. Memory consumption of {{ $labels.name }} is at {{ humanize $value}}.",
+  }
+
+# don't work for many containers, TODO: describe every?
+#ALERT container_eating_memory
+#  IF sum(container_memory_rss{image!="",name!~"graylog|elasticsearch|prometheus"}) by (name) > 700000
+#  LABELS { severity = "warning" }
+#  FOR 5m
+#  ANNOTATIONS {
+#      summary = "High memory usage: CONTAINER '{{ $labels.name }}' on '{{ $labels.instance }}'",
+#      description = "{{ $labels.name }} is eating up a LOT of memory. Memory consumption of {{ $labels.name }} is at {{ humanize $value}}.",
+#  }
+
