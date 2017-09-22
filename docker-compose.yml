@@ -117,3 +117,36 @@ services:
       - monitor-net
     labels:
       org.label-schema.group: "monitoring"
+
+  prodfpmexporter:
+    image: softonic/phpfpm_exporter
+    container_name: prodfpmexporter
+    command:
+      - '-status.url=https://www.englishdom.com/status?json'
+      - '-listen.address=:9099'
+      - '-scrape.interval=1m'
+    restart: unless-stopped
+    expose:
+      - 9099
+    ports:
+      - 9099:9099
+    networks:
+      - monitor-net
+    labels:
+      org.label-schema.group: "monitoring"
+
+  devredisexporter:
+    image: oliver006/redis_exporter:v0.12.2
+    container_name: devredisexporter
+    command:
+      - '-redis.addr=tcp://192.168.0.20:6379'
+    restart: unless-stopped
+    expose:
+      - 9121
+    ports:
+      - 9121:9121
+    networks:
+      - monitor-net
+    labels:
+      org.label-schema.group: "monitoring"
+
