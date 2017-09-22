@@ -15,90 +15,105 @@ rule_files:
 
 # A scrape configuration containing exactly one endpoint to scrape.
 scrape_configs:
-  - job_name: 'release_node_exporter'
-    scrape_interval: 5s
-    static_configs:
-      - targets: ['nodeexporter:9100']
-        labels:
-          alias: "release.englishdom.com"
-
+### Node exporters ########################################
   - job_name: 'prod_node_exporter'
     scrape_interval: 5s
     static_configs:
-      - targets: ['englishdom.com:9100']
+      - targets: ['ed.com:9100']
         labels:
-          alias: "www.englishdom.com"
-
+          alias: "www.ed.com"
   - job_name: 'staging_node_exporter'
     scrape_interval: 5s
     static_configs:
       - targets: ['staging.lc:9100']
         labels:
           alias: "staging.lc"
-
-#  - job_name: 'release_mysql_exporter'
-#    scrape_interval: 5s
-#    static_configs:
-#      - targets: ['englishdom.com:9104']
-#        labels:
-#          alias: "release.englishdom.com"
-
+  - job_name: 'release_node_exporter'
+    scrape_interval: 5s
+    static_configs:
+      - targets: ['nodeexporter:9100']
+        labels:
+          alias: "release.ed.com"
+### MySQL exporters ########################################
   - job_name: 'prod_mysql_exporter'
     static_configs:
-      - targets: ['englishdom.com:9104']
+      - targets: ['ed.com:9104']
         labels:
-          alias: "db.englishdom.com"
-
+          alias: "db.ed.com"
   - job_name: 'staging_mysql_exporter'
     scrape_interval: 5s
     static_configs:
       - targets: ['staging.lc:9104']
         labels:
           alias: "db1.lc"
-
-  - job_name: 'release_cadvisor'
-    scrape_interval: 5s
-    static_configs:
-      - targets: ['mobile.lc:9200']
-        labels:
-          alias: "release.englishdom.com"
-
+#  - job_name: 'release_mysql_exporter'
+#    scrape_interval: 5s
+#    static_configs:
+#      - targets: ['release.ed.com:9104']
+#        labels:
+#          alias: "release.ed.com"
+### cAdvisor exporters ######################################
   - job_name: 'prod_cadvisor'
     scrape_interval: 5s
     static_configs:
-      - targets: ['englishdom.com:9200']
+      - targets: ['ed.com:9200']
         labels:
-          alias: "www.englishdom.com"
-
+          alias: "www.ed.com"
   - job_name: 'staging_cadvisor'
     scrape_interval: 5s
     static_configs:
       - targets: ['staging.lc:9200']
         labels:
           alias: "staging.lc"
-
+  - job_name: 'release_cadvisor'
+    scrape_interval: 5s
+    static_configs:
+      - targets: ['mobile.lc:9200']
+        labels:
+          alias: "release.ed.com"
+### Nginx exporters ##########################################
   - job_name: 'prod_nginx_exporter'
     static_configs:
       - targets: ['prodnginxexporter:9113']
         labels:
-          alias: "www.englishdom.com"
-
+          alias: "www.ed.com"
+#  - job_name: 'staging_nginx_exporter'
+#    static_configs:
+#      - targets: ['devnginxexporter:9113']
+#        labels:
+#          alias: "staging.lc"
+#  - job_name: 'release_nginx_exporter'
+#    static_configs:
+#      - targets: ['releasenginxexporter:9113']
+#        labels:
+#          alias: "release.ed.com"
+### Redis exporters ###########################################
   - job_name: 'prod_redis_exporter'
     static_configs:
-      - targets: ['englishdom.com:9121']
+      - targets: ['ed.com:9121']
         labels:
-          alias: "www.englishdom.com"
-
+          alias: "www.ed.com"
+  - job_name: 'staging_redis_exporter'
+    static_configs:
+      - targets: ['devredisexporter:9121']
+        labels:
+          alias: "staging.lc"
+#  - job_name: 'release_redis_exporter'
+#    static_configs:
+#      - targets: ['mobile.lc:9121'] ? port/hostname
+#        labels:
+#          alias: "release.ed.com"
+### PHP-FPM exporters ########################################
   - job_name: 'prod_phpfpm_exporter'
     static_configs:
-      - targets: ['englishdom.com:9099']
+      - targets: ['prodfpmexporter:9099']
         labels:
-          alias: "www.englishdom.com"
+          alias: "www.ed.com"
 
+### Prometheus exporter ######################################
   - job_name: 'prometheus'
     scrape_interval: 10s
     static_configs:
       - targets: ['localhost:9090']
         labels:
-          alias: "release.englishdom.com"
-
+          alias: "release.ed.com"
